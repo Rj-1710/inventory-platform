@@ -5,6 +5,8 @@ import com.zevoryn.inventory.product.domain.Product;
 import com.zevoryn.inventory.product.domain.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService {
 
@@ -23,5 +25,9 @@ public class ProductService {
         );
 
         return productRepository.save(product);
+    }
+
+    public List<Product> listProducts() {
+        return productRepository.findAll();
     }
 }

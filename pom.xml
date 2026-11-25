@@ -15,7 +15,7 @@
 
     <groupId>com.zevoryn.inventory</groupId>
     <artifactId>inventory-platform</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>inventory-platform</name>
     <description>Enterprise inventory and order-management system</description>
 

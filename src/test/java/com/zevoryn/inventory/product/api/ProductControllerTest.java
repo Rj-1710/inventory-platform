@@ -14,9 +14,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -94,5 +96,24 @@ class ProductControllerTest {
                             """))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.code").value("DUPLICATE_SKU"));
+    }
+
+    @Test
+    void shouldReturnProducts() throws Exception {
+        Product product = new Product(
+                "MACBOOK-PRO-M4",
+                "MacBook Pro M4",
+                "14-inch laptop with M4 chip",
+                new BigDecimal("169900.00")
+        );
+
+        given(productService.listProducts())
+                .willReturn(List.of(product));
+
+        mockMvc.perform(get("/api/products"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].sku").value("MACBOOK-PRO-M4"))
+                .andExpect(jsonPath("$[0].name").value("MacBook Pro M4"))
+                .andExpect(jsonPath("$[0].status").value("ACTIVE"));
     }
 }
