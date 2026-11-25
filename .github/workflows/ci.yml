@@ -1,0 +1,30 @@
+name: Build and Test
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get project code
+        uses: actions/checkout@v7
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Allow Maven Wrapper to run
+        run: chmod +x mvnw
+
+      - name: Build and run tests
+        run: ./mvnw --batch-mode verify
