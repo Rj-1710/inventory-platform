@@ -4,6 +4,8 @@ import com.zevoryn.inventory.product.domain.Product;
 import com.zevoryn.inventory.product.domain.ProductRepository;
 import com.zevoryn.inventory.product.domain.exception.DuplicateSkuException;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,5 +26,12 @@ public class InMemoryProductRepository implements ProductRepository {
         }
 
         return product;
+    }
+
+    @Override
+    public List<Product> findAll() {
+        return productsBySku.values().stream()
+                .sorted(Comparator.comparing(Product::getCreatedAt).reversed())
+                .toList();
     }
 }
