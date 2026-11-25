@@ -1,24 +1,51 @@
 package com.zevoryn.inventory.product.domain;
 
 import com.zevoryn.inventory.product.domain.exception.InvalidProductException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+@Entity
+@Table(name = "products")
 public class Product {
 
     private static final Pattern SKU_PATTERN =
             Pattern.compile("^[A-Z0-9-]{3,30}$");
 
-    private final UUID id;
-    private final String sku;
-    private final String name;
-    private final String description;
-    private final BigDecimal unitPrice;
+    @Id
+    @Column(nullable = false, updatable = false)
+    private UUID id;
+
+    @Column(nullable = false, unique = true, length = 30)
+    private String sku;
+
+    @Column(nullable = false, length = 150)
+    private String name;
+
+    @Column(length = 1000)
+    private String description;
+
+    @Column(name = "unit_price", nullable = false, precision = 19, scale = 2)
+    private BigDecimal unitPrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
     private ProductStatus status;
-    private final Instant createdAt;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    protected Product() {
+        // Required by JPA/Hibernate.
+    }
 
     public Product(String sku, String name, String description, BigDecimal unitPrice) {
         validateSku(sku);
